@@ -5,6 +5,7 @@ const config = require("./config/config");
 const globalErrorHandler = require("./middlewares/globalErrorHandler");
 const cookieParser = require("cookie-parser");
 const app = express();
+const cors = require("cors");
 
 // const createHttpError = require("http-errors")
 
@@ -14,6 +15,10 @@ conn();
 //Middleware
 app.use(express.json()); //parse incoming requests with JSON payloads
 app.use(cookieParser()); //parse cookies from incoming requests
+app.use(cors({
+    credentials: true,
+    origin: ["http://localhost:5173"]
+})); //enable CORS for requests from the client URL
 
 //Root Endpoint
 app.get("/", (req, res)=>{
