@@ -1,6 +1,7 @@
 import Auth from "./pages/auth.jsx"
 import Header from "./components/layout/header.jsx"
 import Catalogo from "./components/layout/home/catalogo.jsx"
+import Seats from "./pages/seats.jsx"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 
@@ -23,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Catalogo />} />
+          <Route path="/seats" element={<Seats />} />
         </Routes>
       </Layout>
     </Router>
