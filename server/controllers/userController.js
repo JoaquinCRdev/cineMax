@@ -76,4 +76,14 @@ const getUserData = async (req, res, next) => {
     }
 };
 
-module.exports = { register, login, getUserData };
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("accessToken")
+    res.status(200).json({ success: true, message: "Logout successful!" });
+  }
+  catch (e) {
+    next(e);
+  }
+};
+
+module.exports = { register, login, getUserData, logout };
