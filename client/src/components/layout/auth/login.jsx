@@ -34,7 +34,7 @@ const Login = () => {
         mutationFn: (reqData) => login(reqData),
         onSuccess: (res) => {
           const { data } = res;
-          const { _id, name, email } = data;
+          const { _id, name, email } = data.data;
           dispatch(setUser({ _id, name, email }));
           navigate("/");
         },

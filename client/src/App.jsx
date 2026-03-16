@@ -1,18 +1,24 @@
 import Auth from "./pages/auth.jsx"
 import Header from "./components/layout/header.jsx"
-import Catalogo from "./components/layout/home/catalogo.jsx"
-import Seats from "./pages/seats.jsx"
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-
-
-const Layout = ({ children }) => {
+import Home from "./pages/home.jsx";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+const Layout = () => {
   const location = useLocation();
   const hideHeaderRoutes = ['/auth'];
+  const { isAuth } = useSelector((state) => state.user);
 
   return (
     <div>
       {!hideHeaderRoutes.includes(location.pathname) && <Header />}
-      {children}
+      <Routes>
+          <Route path="/auth" element={isAuth ? <Navigate to="/" /> : <Auth />} />
+          <Route path="/" element={
+            <ProtectedRoutes>
+              <Home />
+            </ProtectedRoutes>
+          } />
+      </Routes>
     </div>
   );
 };
@@ -20,15 +26,19 @@ const Layout = ({ children }) => {
 const App = () => {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/" element={<Catalogo />} />
-          <Route path="/seats" element={<Seats />} />
-        </Routes>
-      </Layout>
+      <Layout />
     </Router>
   )
 }
 
+function ProtectedRoutes({ children }) {
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  if (!isAuthenticated) {
+    console.log("Usuario no autenticado, redirigiendo a /auth");
+    return <Navigate to="/auth" />;
+  }
+
+  return children;
+}
 export default App
