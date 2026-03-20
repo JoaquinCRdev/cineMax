@@ -1,4 +1,9 @@
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { useSelector, useDispatch } from "react-redux"
+import { setSeats } from "../redux/slices/seatSlice"
+import { useNavigate } from "react-router-dom"
+import { enqueueSnackbar } from "notistack"
 
 const asientos= [ 
     {tipo: "Premium", precio: "510", filas: [{fila: "E", cantidad: "10"}]},
@@ -14,6 +19,11 @@ const Seats = () => {
   const [selectedSeat, setSelectedSeat] = useState([])
   const ocupados = ["E1", "E2", "D1", "C1", "B1", "A1"] //modificar con BD
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { selectedSeats } = useSelector((state) => state.seat);
+
   const handleSeatClick = (seat) => {
     if (ocupados.includes(seat)) return;
     if (selectedSeat.includes(seat)) {
@@ -22,6 +32,25 @@ const Seats = () => {
     setSelectedSeat([...selectedSeat, seat])}
    }
 
+
+    const loginMutation = useMutation({
+        mutationFn: (reqData) => {
+            console.log("Datos enviados a la función de mutación:", reqData);
+        },
+        onSuccess: (data) => {
+            const { selectedSeats } = data;
+            const { location, prize } = data;
+            dispatch(setSeats(selectedSeats));
+            navigate("/payment");
+        },
+        onError: (error) => {
+            enqueueSnackbar("Error al procesar la compra. Por favor, inténtalo de nuevo.", { variant: "error" });
+        }
+    });
+
+   const handleSubmit = () => {
+    navigate("/compra", { state: { selectedSeats } });
+   }
 
    return (
     <div className="bg-[#632224] flex flex-col items-center gap-16 pt-4 w-full">
@@ -74,7 +103,7 @@ const Seats = () => {
 
             <button
             className="bg-yellow-400 text-black px-6 py-2 rounded font-bold hover:bg-yellow-300"
-            onClick={() => alert(`Compraste los asientos: ${selectedSeat.join(", ")}`)}
+            onClick={() => handleSubmit()}
             >
             Comprar
             </button>

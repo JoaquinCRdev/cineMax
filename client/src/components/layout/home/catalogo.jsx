@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
+
 const Catalogo = () => {
+  const navigate = useNavigate();
   const peliculas = [
     {
       id: 1,
@@ -16,6 +20,11 @@ const Catalogo = () => {
       image: "/logo.jpg",
     },
   ];
+
+
+  const handleGetTickets = (peliculaId) => {
+    navigate("/seats", { state: { peliculaId } });
+  };
 
 return (
   <div className="bg-[#632224] p-5 flex justify-center box-border">
@@ -45,7 +54,7 @@ return (
                 {title}
               </h3>
 
-              <button className="inline-block my-8 mb-3 font-black text-[0.95rem] px-2.5 py-2 rounded-lg bg-[#4C191B] text-[rgb(156,155,155)] cursor-pointer hover:bg-[#270c0d] transition-colors duration-200">
+              <button onClick={() => handleGetTickets(pelicula.id)} className="inline-block my-8 mb-3 font-black text-[0.95rem] px-2.5 py-2 rounded-lg bg-[#4C191B] text-[rgb(156,155,155)] cursor-pointer hover:bg-[#270c0d] transition-colors duration-200">
                 Conseguir Tickets
               </button>
 
