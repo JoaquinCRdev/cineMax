@@ -12,20 +12,76 @@ const asientos= [
 
 const Seats = () => {
   const [selectedSeat, setSelectedSeat] = useState([])
+  const ocupados = ["E1", "E2", "D1", "C1", "B1", "A1"] //modificar con BD
 
   const handleSeatClick = (seat) => {
-  }
+    if (ocupados.includes(seat)) return;
+    if (selectedSeat.includes(seat)) {
+    setSelectedSeat(selectedSeat.filter(s => s !== seat))} 
+    else {
+    setSelectedSeat([...selectedSeat, seat])}
+   }
 
-  return (
-    <div>
-        <h1>Premium $510</h1>
 
-        <h1>Executive $290</h1>
+   return (
+    <div className="bg-[#632224] flex flex-col items-center gap-16 pt-4 w-full">
 
-        <h1>Normal $150</h1>
+      {asientos.map((section) => (
+
+        <div key={section.tipo} className="bg-[#74605d] flex flex-col items-center gap-6 rounded-lg p-5">
+
+          <h1>{section.tipo} ${section.precio}</h1>
+
+          {section.filas.map((fila) => (
+
+            <div key={fila.fila}  className="bg-[#74605d] flex items-center gap-4">
+
+              <span>{fila.fila}</span>
+
+              {Array.from({length: fila.cantidad}, (_, i) => {
+
+                const seatId = `${fila.fila}${i+1}`
+
+                return (
+                  <button
+                    key={seatId}
+                    disabled={ocupados.includes(seatId)}
+                    onClick={() => handleSeatClick(seatId)}
+                    className={` w-10 h-8 border rounded ${ocupados.includes(seatId) ? 'opacity-50 cursor-not-allowed bg-[#808180]' : 'cursor-pointer'} ${selectedSeat.includes(seatId) ? 'bg-[#77631f]' : 'bg-[#D4AF37]'}`}
+                  >
+                    {i+1}
+                  </button>
+                )
+
+              })}
+
+            </div>
+
+          ))}
+
+        </div>
+
+      ))}
+
+      <img src="/pantalla2.png" alt="pantalla de cine" />
+
+      {selectedSeat.length > 0 && (
+
+        <div className="bg-[#3a1314] text-white p-4 rounded-lg flex flex-col items-center gap-3 mb-6">
+            <p>
+            Cantidad:{selectedSeat.length}
+            </p>
+
+            <button
+            className="bg-yellow-400 text-black px-6 py-2 rounded font-bold hover:bg-yellow-300"
+            onClick={() => alert(`Compraste los asientos: ${selectedSeat.join(", ")}`)}
+            >
+            Comprar
+            </button>
+        </div>
+        )}
     </div>
   )
-
 }
 
 export default Seats
